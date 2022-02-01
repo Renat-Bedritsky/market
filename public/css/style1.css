@@ -1,0 +1,1241 @@
+/* Общие стили */
+* {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+html, body {
+    height: 100%;
+}
+
+.window {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.width {
+    width: 80%;
+    max-width: 1840px;
+    margin: auto;
+}
+
+h2 {
+    text-align: center;
+    font-size: 42px;
+    margin: 20px 0;
+    font-weight: 400 !important;
+}
+
+a {
+    text-decoration: none;
+    color: rgb(157, 157, 157);
+}
+
+a:hover {
+    color: white;
+}
+
+li {
+    list-style-type: none;
+}
+
+.header {
+    background-color: rgb(34, 34, 34);
+    height: 75px;
+}
+
+.header_wrapper {
+    padding: 10px 0;
+    display: flex;
+}
+
+.header_logo {
+    width: 170px;
+    height: 50px;
+}
+
+.header_nav {
+    margin-left: 30px;
+    padding-top: 14px;
+}
+
+.header_nav ul li {
+    display: inline;
+    font-size: 24px;
+    text-transform: uppercase;
+    margin-left: -4px;
+}
+
+.header_nav ul li a {
+    padding: 23px 30px;
+}
+
+.header_nav ul li a:hover {
+    background-color: black;
+}
+
+#header_nav_toggle {
+    display: none;
+}
+
+.header_nav_toggle {
+    position: relative;
+    display: none;
+    border: 0;
+    outline: 0;
+    background: none;
+}
+
+.header_nav_toggle::before {
+    content: "≡";
+    color: rgb(51, 122, 183);
+    font-size: 30px;
+}
+
+.header_nav_toggle:hover::before {
+    color: rgb(35, 82, 124);
+}
+
+.header_nav_toggle label {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+}
+
+.window_wrapper {
+    flex: 1 0 auto;
+}
+
+.enter_account {
+    margin-left: auto;
+    font-size: 24px;
+}
+
+.enter_account a {
+    display: inline-block;
+    min-width: 100px;
+    font-size: 20px;
+    padding: 16px 20px;
+    text-align: center;
+}
+
+.enter_account a:hover {
+    background-color: black;
+}
+
+.nav_account {
+	display: inline-block;
+	text-align: center;
+    background-color: rgb(34, 34, 34);
+}
+
+.nav_account a {
+    display: inline-block;
+    background-color: rgb(34, 34, 34);
+}
+
+.nav_account ul {
+	display: flex;
+	list-style: none;
+    justify-content: flex-start;
+}
+
+.nav_account li {
+	position: relative;
+}
+
+.nav_account li > ul {
+	display: none;
+}
+
+.nav_account li:hover > ul {
+	display: block;
+	position: absolute;
+	white-space: nowrap;
+}
+
+.footer {
+    background-color: rgb(34, 34, 34);
+    margin-top: 40px;
+}
+
+.footer_wrapper {
+    display: flex;
+    padding: 30px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.footer ul {
+    margin-left: calc(100% - 600px);
+}
+
+/* Стили для function.php */
+.products {
+    background-color: rgba(0, 0, 0, .0);
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 57px);
+}
+
+.wrapper {
+    flex: 1 0 auto;
+
+}
+
+.products_filter form {
+    max-width: 1100px;
+    margin: auto;
+}
+
+.products_filter input:not(:nth-child(4)) {
+    padding: 5px 10px;
+    margin: 0 5px;
+}
+
+.products_filter input:nth-child(4) {
+    margin-left: 50px;
+}
+
+.products_filter button {
+    margin-left: 254px;
+    padding: 5px 10px;
+    font-size: 18px;
+    color: white;
+    background-color: rgb(51, 122, 183);
+    border: 1px solid rgb(51, 122, 183);
+    border-radius: 5px;
+}
+
+.products_filter button:hover {
+    cursor: pointer;
+    background-color: rgb(40, 96, 144);
+    border: 1px solid rgb(40, 96, 144);
+}
+
+.products_filter a {
+    margin-left: 5px;
+    padding: 5px 15px;
+    font-size: 18px;
+    color: white;
+    background-color: rgb(240, 173, 78);
+    border: 1px solid rgb(240, 173, 78);
+    border-radius: 5px;
+}
+
+.products_filter a:hover {
+    background-color: rgb(236, 151, 31);
+    border: 1px solid rgb(236, 151, 31);
+}
+
+.products_wrapper {
+    width: 1512px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+}
+
+.product {
+    width: 330px;
+    height: 330px;
+    margin:  10px;
+    padding: 10px;
+}
+
+.product_wrapper {
+    width: 330px;
+    height: 330px;
+    margin: auto;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid rgb(204, 204, 204);
+}
+
+.product_wrapper p {
+    margin: 5px 0;
+}
+
+.product_wrapper img {
+    margin: 10px 0;
+    max-width: 280px;
+    height: 180px;
+}
+
+.product_wrapper form {
+    margin-top: 10px;
+}
+
+.product_wrapper form button {
+    font-size: 14px;
+    padding: 10px 15px;
+    border-radius: 3px;
+    color: white;
+    background-color: rgb(51, 122, 183);
+    border: 1px solid rgb(51, 122, 183);
+}
+
+.product_wrapper form button:hover {
+    background-color: rgb(40, 96, 144);
+    border: 1px solid rgb(40, 96, 144);
+    cursor: pointer;
+}
+
+.add_basket_product a {              /* Стиль для кнопки, если пользователь не авторизирован */
+    padding: 10px 15px !important;
+    display: inline-block;
+    background-color: rgb(51, 122, 183) !important;
+    border: 1px solid rgb(51, 122, 183) !important;
+    color: white !important;
+}
+
+.add_basket_product a:hover {         /* Стиль для кнопки, если пользователь не авторизирован */
+    background-color: rgb(40, 96, 144) !important;
+    border: 1px solid rgb(40, 96, 144) !important;
+}
+
+.product_wrapper form a {
+    font-size: 14px;
+    color: black;
+    padding: 10px 10px;
+    border-radius: 3px;
+    background-color: white;
+    border: 1px solid rgb(204, 204, 204);
+}
+
+.product_wrapper form a:hover {
+    background-color: rgb(230, 230, 230);
+}
+
+.pages_pagination {
+    flex-shrink: 0;
+    flex: 0 0 auto;
+}
+
+.pages_pagination a {
+    padding: 5px 10px;
+    overflow: hidden;
+    border-radius: 3px;
+}
+
+.pages_pagination a:hover {
+    background-color: lightseagreen;
+}
+
+/* Стили для categories.php */
+.categories_wrapper {
+    margin-top: 70px;
+}
+
+.category {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.category a {
+    color: rgb(51, 122, 183);
+    font-size: 30px;
+}
+
+.category a:hover {
+    color: rgb(35, 82, 124);
+    text-decoration: underline;
+}
+
+/* Стили для basket.php */
+.basket p {
+    text-align: center;
+}
+
+.basket_table {
+    margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.basket_table img {
+    width: 56px;
+    height: 56px;
+}
+
+.basket_table tr td {
+    border-bottom: 2px solid #ddd;
+}
+
+.basket_table tr:last-child td {
+    border-bottom: 0;
+}
+
+.basket_table tr:nth-child(1) td {
+    font-weight: 700;
+    padding-bottom: 5px;
+}
+
+.basket_table tr td:nth-child(2) a {
+    color: black;
+}
+
+.basket_table tr td:nth-child(2) a:hover {
+    color: gray;
+}
+
+.basket_table tr td:nth-child(1) {
+    width: 70px;
+}
+
+.basket_table tr td:nth-child(2) {
+    width: 40%;
+    padding-left: 3px;
+}
+
+.basket_table tr td:nth-child(3),
+.basket_table tr td:nth-child(4),
+.basket_table tr td:nth-child(5) {
+    white-space: nowrap;
+}
+
+.basket_table tr:not(:nth-child(1)) td:nth-child(3) p {
+    margin-top: 5px;
+    float: left;
+}
+/* order */
+.basket_table tr:not(:nth-child(1)) td:nth-child(3) form {
+    margin: -5px 0 0 20px;
+}
+
+.basket_table tr:not(:nth-child(1)) td:nth-child(3) form button {
+    padding: 10px 16px;
+    cursor: pointer;
+    color: white;
+    border: 0;
+    border-radius: 5px;
+}
+
+.basket_table tr:not(:nth-child(1)) td:nth-child(3) form button:nth-child(2) {
+    background-color: rgb(217, 83, 79);
+}
+
+.basket_table tr:not(:nth-child(1)) td:nth-child(3) form button:nth-child(2):hover {
+    background-color: rgb(201, 48, 44);
+}
+
+.basket_table tr:not(:nth-child(1)) td:nth-child(3) form button:nth-child(3) {
+    background-color: rgb(92, 184, 92);
+}
+
+.basket_table tr:not(:nth-child(1)) td:nth-child(3) form button:nth-child(3):hover {
+    background-color: rgb(68, 157, 68);
+}
+
+.basket_order {
+    margin-top: 20px;
+    width: 156px;
+    margin-left: auto;
+}
+
+.basket_order a {
+    background-color: rgb(92, 184, 92);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.basket_order a:hover {
+    background-color: rgb(68, 157, 68);
+}
+
+.basket_clear {
+    margin-top: 20px;
+    width: 156px;
+    margin-left: auto;
+}
+
+.basket_clear a {
+    background-color: rgb(217, 83, 79);
+    color: white;
+    padding: 10px 43px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.basket_clear a:hover {
+    background-color: rgb(201, 48, 44);
+}
+
+/* Стили для order.php */
+.order_wrapper {
+    text-align: center;
+}
+
+.color_price {
+    color: rgb(92, 184, 92);
+}
+
+.order_wrapper p {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+.order_wrapper form {
+    margin-top: 10px;
+}
+
+.order_wrapper form table {
+    margin: auto;
+    width: 550px;
+}
+
+.order_wrapper form input {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 35px;
+    width: 330px;
+    outline: none;
+    padding: 0 10px;
+    margin-left: 20px;
+}
+
+.order_wrapper form table tr td {
+    height: 50px;
+}
+
+.order_wrapper form table tr td:first-child {
+    width: 150px;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.order_basket {
+    background-color: rgb(92, 184, 92);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    border: 0;
+    float: left;
+    margin-left: 32px;
+}
+
+.order_basket:hover {
+    background-color: rgb(68, 157, 68);
+}
+
+.order_enter {
+    display: none;
+    position: absolute;
+    width: 100vw;
+    height: 80vh;
+    background-color: rgba(40, 40, 40, .5);
+}
+
+.order_enter_window {
+    padding-top: 20px;
+    background-color: white;
+    margin: 150px auto;
+    width: 400px;
+    height: 200px;
+    font-size: 22px;
+    text-align: center;
+}
+
+/* Стили для detail.php */
+.detail_wrapper {
+    text-align: center;
+}
+
+.detail_wrapper p {
+    margin: 20px 0;
+}
+
+.detail_wrapper p a {
+    color: rgb(51, 122, 183);
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.detail_wrapper img {
+    max-width: 550px;
+    max-height: 550px;
+}
+
+.detail_wrapper p a:hover {
+    color: rgb(40, 96, 144);
+}
+
+.detail_wrapper form button  {
+    padding: 10px 16px;
+    cursor: pointer;
+    color: white;
+    font-size: 14px;
+    border: 0;
+    border-radius: 5px;
+    background-color: rgb(92, 184, 92);
+}
+
+.detail_wrapper form button:hover  {
+    background-color: rgb(68, 157, 68);
+}
+
+.add_basket_detail a {
+    padding: 10px 16px;
+    color: white;
+    font-size: 14px;
+    display: inline-block;
+    border-radius: 5px;
+    background-color: rgb(92, 184, 92);
+}
+
+.add_basket_detail a:hover {
+    background-color: rgb(68, 157, 68);
+}
+
+.detail_comments {
+    margin-top: 50px;
+}
+
+.comment {
+    border: 1px solid rgb(204, 204, 204);
+    padding: 10px 30px 10px 10px;
+    margin: 20px 0;
+}
+
+.comment table {
+    width: 100%;
+}
+
+.comment table img {
+    max-width: 100px;
+    max-height: 100px;
+}
+
+.comment table tr:nth-child(2) td:nth-child(1) {
+    width: 200px;
+}
+
+.comment table tr:nth-child(2) td:nth-child(1) a {
+    color: rgb(92, 184, 92);
+}
+
+.comment table tr:nth-child(2) td:nth-child(1) a:hover {
+    color: rgb(68, 157, 68);
+}
+
+.comment table tr:nth-child(1) td {
+    width: 100px;
+}
+
+.comment table tr:not(:nth-child(1)) td {
+    padding-left: 10px;
+}
+
+.comment table tr:nth-child(3) td {
+    padding: 20px;
+    border-top: 1px solid rgb(204, 204, 204);
+    border-bottom: 1px solid rgb(204, 204, 204);
+}
+
+.comment .delete_comment {
+    background-color: rgba(255, 0, 0, .7);
+    border-radius: 5px;
+    border: 0;
+    margin-top: 10px;
+    padding: 5px 10px;
+    color: white;
+    float: right;
+}
+
+.comment .delete_comment:hover {
+    background-color: rgba(255, 0, 0, .9);
+    cursor: pointer;
+}
+
+.comment .update_comment {
+    background-color: rgb(92, 184, 92);
+    border-radius: 5px;
+    border: 0;
+    margin-top: 10px;
+    margin-right: 5px;
+    padding: 5px 10px;
+    color: white;
+    float: right;
+}
+
+.comment .update_comment:hover {
+    background-color: rgb(68, 157, 68);
+    cursor: pointer;
+}
+
+.detail_comment_add {
+    margin-top: 50px;
+}
+
+.detail_comment_add textarea {
+    font-size: 18px;
+    border-radius: 5px;
+    outline: 0;
+    padding: 10px;
+}
+
+.detail_comment_add button {
+    background-color: rgb(92, 184, 92);
+    font-size: 18px;
+    border-radius: 5px;
+    border: 0;
+    margin-top: 5px;
+    padding: 10px 20px;
+    color: white;
+}
+
+.detail_comment_add button:hover {
+    background-color: rgb(68, 157, 68);
+    cursor: pointer;
+}
+
+.update_field {
+    display: none;
+    position: absolute;
+    width: 100vw;
+    height: calc(100vh - 75px);
+    background-color: rgba(40, 40, 40, .5);
+}
+
+.update_field_wrapper {
+    padding-top: 20px;
+    background-color: white;
+    width: 500px;
+    height: 210px;
+    margin: 150px auto;
+    font-size: 22px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.update_field_wrapper form {
+    margin-top: 10px;
+}
+
+.update_field_wrapper form textarea {
+    outline: 0;
+}
+
+.update_field_wrapper form input {
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.update_field_wrapper form input {
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: 0;
+    border-radius: 5px;
+    background-color: rgb(92, 184, 92);
+}
+
+.update_field_wrapper form input:hover {
+    background-color: rgb(68, 157, 68);
+}
+
+.update_field_wrapper form a {
+    color: white;
+    padding: 3.5px 15px;
+    border-radius: 5px;
+    background-color: rgb(217, 83, 79);
+}
+
+.update_field_wrapper form a:hover {
+    background-color: rgb(201, 48, 44);
+}
+
+/* Стили для auth.php и registration.php */
+.auth,
+.registration {
+    border: 3px solid black;
+    padding: 10px;
+    width: 420px;
+    margin: 10% auto 0 auto;
+    font-size: 32px;
+    text-align: center;
+}
+
+.auth_title,
+.auth_error,
+.registration_title,
+.registration_error {
+    font-size: 32px;
+    width: 400px;
+    text-align: center;
+    margin: 10px auto 0 auto;
+}
+
+.auth input,
+.registration input {
+    width: 99%;
+    height: 40px;
+    font-size: 32px;
+}
+
+.auth button,
+.registration button {
+    margin-top: 10px;
+    width: 190px;
+    font-size: 28px;
+}
+
+/* Стили для addPost.php */
+.add_product form {
+    font-size: 28px;
+    text-align: center;
+}
+
+.add_product form textarea,
+.add_product form select {
+    border: 1px solid rgb(39, 123, 218);
+    margin: 10px 0;
+    font-size: 20px;
+    outline: 0;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+.add_product form button {
+    padding: 10px 20px;
+    background-color: rgb(39, 123, 218);
+    border: 2px solid rgb(39, 123, 218);
+    cursor: pointer;
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+.add_product form button:hover {
+    background-color: white;
+}
+
+.add_product_name input {
+    width: 616px;
+    border: 1px solid rgb(39, 123, 218);
+    height: 40px;
+    outline: 0;
+    border-radius: 3px;
+    padding: 0 5px;
+    font-size: 20px;
+}
+
+textarea {
+    resize: none;
+}
+
+/* Стили для profile.php */
+.profile_foto {
+    max-width: 250px;
+    max-height: 250px;
+    border: 1px solid rgb(204, 204, 204);
+    text-align: center;
+}
+
+.profile_foto img {
+    max-width: 250px;
+    max-height: 250px;
+}
+
+.profile_foto button {
+    background-color: white;
+}
+
+.profile_foto button:hover {
+    background-color: rgb(230, 230, 230);
+}
+
+.profile {
+    display: flex;
+}
+
+.profile_info {
+    margin-left: 100px;
+}
+
+.profile_info tr td:not(:nth-child(1)) {
+    padding-left: 50px;
+}
+
+.profile_products {
+    border: 0;
+    margin: 60px 0 20px 0;
+}
+
+.profile_products a,
+.profile_comments a {
+    color: rgb(51, 122, 183);
+    font-size: 18px;
+}
+
+.profile_products a:hover,
+.profile_comments a:hover {
+    color: rgb(40, 96, 144);
+}
+
+.profile_nav a {
+    font-size: 20px;
+    padding: 5px 10px;
+    color: white;
+    background-color: rgb(92, 184, 92);
+}
+
+.profile_nav a:hover {
+    background-color: rgb(68, 157, 68);
+}
+
+.profile_wrapper {
+    margin-top: 20px;
+}
+
+.profile_wrapper .search_user {
+    margin-top: 30px;
+}
+
+.profile_wrapper .search_user form input {
+    outline: 0;
+    margin: 5px 5px 5px 0;
+}
+
+.profile_wrapper .search_user a {
+    color: rgb(51, 122, 183);
+    font-size: 20px;
+}
+
+.profile_wrapper .search_user a {
+    color: rgb(40, 96, 144);
+}
+
+.profile_comments table,
+.profile_products table {
+    border-collapse: collapse;
+    width: 90%;
+}
+
+.profile_comments table tr td,
+.profile_products table tr td {
+    padding: 3px 0;
+}
+
+.profile_comments table tr:not(:last-child) td,
+.profile_products table tr:not(:last-child) td {
+    border-bottom: 1px solid gray;
+}
+
+.profile_comments table form button,
+.profile_products table form button {
+    color: white;
+    padding: 5px 15px;
+    border-radius: 5px;
+    background-color: rgb(217, 83, 79);
+    border: 0;
+    cursor: pointer;
+    float: right;
+}
+
+.profile_comments table form button:hover,
+.profile_products table form button:hover {
+    background-color: rgb(201, 48, 44);
+}
+
+.add_product_banned,
+.delete_product,
+.delete_field,
+.update_foto {
+    display: none;
+    position: absolute;
+    width: 100vw;
+    height: calc(100vh - 75px);
+    background-color: rgba(40, 40, 40, .5);
+}
+
+.add_product_banned_wrapper,
+.delete_product_wrapper,
+.delete_field_wrapper,
+.update_foto_wrapper {
+    padding-top: 20px;
+    background-color: white;
+    width: 300px;
+    height: 120px;
+    margin: 150px auto;
+    font-size: 22px;
+    text-align: center;
+}
+
+.add_product_banned_wrapper form,
+.delete_product_wrapper form,
+.delete_field_wrapper form,
+.update_foto_wrapper form {
+    margin-top: 10px;
+}
+
+.add_product_banned_wrapper form button,
+.delete_product_wrapper form button,
+.delete_field_wrapper form button,
+.update_foto_wrapper form button {
+    margin: 20px 0;
+    font-size: 20px;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: 0;
+    border-radius: 5px;
+    background-color: rgb(92, 184, 92);
+}
+
+.add_product_banned_wrapper form button:hover,
+.delete_product_wrapper form button:hover,
+.delete_field_wrapper form button:hover,
+.update_foto_wrapper form button:hover {
+    background-color: rgb(68, 157, 68);
+}
+
+.add_product_banned_wrapper form a,
+.delete_product_wrapper form a,
+.delete_field_wrapper form a,
+.update_foto_wrapper form a {
+    color: white;
+    padding: 3.5px 15px;
+    border-radius: 5px;
+    background-color: rgb(217, 83, 79);
+}
+
+.add_product_banned_wrapper form a:hover,
+.delete_product_wrapper form a:hover,
+.delete_field_wrapper form a:hover,
+.update_foto_wrapper form a:hover {
+    background-color: rgb(201, 48, 44);
+}
+
+/* Стили для control.php */
+.control_nav a {
+    font-size: 20px;
+    padding: 5px 10px;
+    color: white;
+    background-color: rgb(92, 184, 92);
+}
+
+.control_nav a:hover {
+    background-color: rgb(68, 157, 68);
+}
+
+.control_wrapper {
+    margin-top: 4px;
+}
+
+.control_wrapper table {
+    border-collapse: collapse;
+}
+
+.control_wrapper tr:not(:last-child) td {
+    border-bottom: 1px solid gray;
+}
+
+.control_wrapper td {
+    width: 20%;
+    height: 30px;
+}
+
+.control_wrapper tr:nth-child(1) td {
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.control_wrapper .users {
+    margin-top: 20px;
+}
+
+.control_wrapper .users a {
+    color: rgb(51, 122, 183);
+}
+
+.control_wrapper .users a:hover {
+    color: rgb(40, 96, 144);
+}
+
+.control_wrapper .users button {
+    cursor: pointer;
+}
+
+.update_position {
+    display: none;
+    position: absolute;
+    width: 100vw;
+    height: calc(100vh - 75px);
+    background-color: rgba(40, 40, 40, .5);
+}
+
+.update_position_wrapper {
+    padding-top: 20px;
+    background-color: white;
+    width: 400px;
+    height: 180px;
+    margin: 150px auto;
+    font-size: 22px;
+    text-align: center;
+}
+
+.update_position_wrapper form {
+    margin-top: 30px;
+}
+
+.update_position_wrapper form select,
+.update_position_wrapper form input {
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.update_position_wrapper form input {
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: 0;
+    border-radius: 5px;
+    background-color: rgb(92, 184, 92);
+}
+
+.update_position_wrapper form input:hover {
+    background-color: rgb(68, 157, 68);
+}
+
+.update_position_wrapper form a {
+    color: white;
+    padding: 3.5px 15px;
+    border-radius: 5px;
+    background-color: rgb(217, 83, 79);
+}
+
+.update_position_wrapper form a:hover {
+    background-color: rgb(201, 48, 44);
+}
+
+/* Стили для orders */
+.orders_wrapper {
+    display: flex;
+}
+
+.orders_new,
+.orders_done {
+    width: 50%;
+    min-height: 200px;
+    max-height: 1000px;
+}
+
+.orders_new_wrapper,
+.orders_done_wrapper {
+    margin: 30px auto 0 auto;
+    width: 90%;
+    min-height: 140px;
+    max-height: 640px;
+    overflow: auto;
+}
+
+.orders_new_wrapper table,
+.orders_done_wrapper table {
+    background-color: #eee;
+    margin-top: 20px;
+    padding: 20px;
+    width: 100%;
+}
+
+.orders_new_wrapper table td,
+.orders_done_wrapper table td {
+    width: 50%;
+}
+
+.orders_product_name {
+    margin-top: 15px;
+    display: block;
+}
+
+.orders_product_count {
+    margin-bottom: 15px;
+    display: block;
+}
+
+.orders_new_wrapper button,
+.orders_done_wrapper button {
+    margin-top: 20px;
+    width: 100px;
+    height: 30px;
+    font-size: 18px;
+    background-color: rgb(92, 184, 92);
+    border: 0;
+    cursor: pointer;
+    color: white;
+    border-radius: 5px;
+}
+
+.orders_new_wrapper button:hover,
+.orders_done_wrapper button:hover {
+    background-color: rgb(68, 157, 68);
+}
+
+.view_order {
+    position: absolute;
+    width: 100vw;
+    height: calc(100vh - 75px);
+    background-color: rgba(40, 40, 40, .5);
+}
+.view_order_window {
+    padding-top: 20px;
+    background-color: white;
+    margin: 150px auto;
+    width: 400px;
+    height: 200px;
+    font-size: 22px;
+    text-align: center;
+}
+
+.view_order_window form button {
+    font-size: 14px;
+    padding: 10px 15px;
+    border-radius: 3px;
+    color: white;
+    background-color: rgb(92, 184, 92);
+    border: 1px solid rgb(92, 184, 92);
+    width: 150px;
+    height: 40px;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.view_order_window form button:nth-child(4) {
+    background-color: rgb(217, 83, 79);
+    border: 1px solid rgb(217, 83, 79);
+}
+
+.view_order_window form button:hover {
+    background-color: rgb(68, 157, 68);
+    border: 1px solid rgb(68, 157, 68);
+    cursor: pointer;
+}
+
+.view_order_window form button:nth-child(4):hover {
+    background-color: rgb(201, 48, 44);
+    border: 1px solid rgb(201, 48, 44);
+}
+
+.view_order_window form a {
+    border-radius: 3px;
+    width: 120px;
+    height: 20px;
+    padding: 10px 15px;
+    display: inline-block;
+    background-color: rgb(51, 122, 183);
+    border: 1px solid rgb(51, 122, 183);
+    color: white;
+}
+
+.view_order_window form a:hover {
+    background-color: rgb(40, 96, 144);
+    border: 1px solid rgb(40, 96, 144);
+}
