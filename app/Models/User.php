@@ -69,12 +69,7 @@ class User extends Authenticatable
     // Функция для получения данных корзины
     function getBasket($id)
     {
-        $basket = User::all()->where('id', $id);
-        foreach ($basket as $path) {
-            $mass = json_decode($path['basket']);   // Декодировка
-        }
-        $result = (array)$mass;
-        return $result;
+        return User::select('basket')->where('id', '=', $id)->get();
     }
 
 

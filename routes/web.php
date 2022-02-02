@@ -57,7 +57,7 @@ Route::match(['get', 'post'], '/basket', [BasketController::class, 'getBasket'])
 
 Route::get('/categories', [CategoriesController::class, 'getCategories']);
 
-Route::match(['get', 'post'], '/', [BaseController::class, 'get']);
+Route::match(['get', 'post'], '/', [BaseController::class, 'getProducts']);
 
-Route::match(['get', 'post'], '/{page}', [BaseController::class, 'get']);
+Route::match(['get', 'post'], '/{page}', [BaseController::class, 'getProducts']);
 

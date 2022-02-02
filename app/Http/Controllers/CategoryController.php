@@ -24,7 +24,8 @@ class CategoryController extends Controller
         $userData = $user->checkCookieLogin();
 
         if (isset($request['plus']) && !empty($userData)) {
-            $basket = $user->getBasket($userData['author_id']);
+            $jsonBasket = $user->getBasket($userData['author_id']);
+            $basket = (array)json_decode($jsonBasket[0]['basket']);
             $user->plusBasket($basket, $request['plus'], $userData['author_id']);
             return redirect($_SERVER['REQUEST_URI']);
         }

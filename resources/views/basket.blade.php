@@ -21,7 +21,7 @@
             @foreach ($info['products'] as $product)
                 <tr>
                     <td><img src="images/foto_products/{{ $product['image'] }}"></td>
-                    <td><a href="detail/{{ $product->code }}">{{ $product->name }}</a></td>
+                    <td><a href="detail/{{ $product['code'] }}">{{ $product['name'] }}</a></td>
                     <td>
                         <p>{{ $product['count'] }}</p>
                         <form method="POST">

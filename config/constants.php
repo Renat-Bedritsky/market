@@ -2,4 +2,4 @@
 
 namespace App\constants;
 
-define('ONPAGE', 3);
+define('PRODUCTS_ON_PAGE', 3);

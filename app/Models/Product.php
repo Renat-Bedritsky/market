@@ -10,68 +10,32 @@ class Product extends Model
     use HasFactory;
     public $timestamps = false;
 
-    function filterProducts($category, $page)
+    function filterProductsForBase($min, $max, $new, $page)
     {
-        date_default_timezone_set('Europe/Minsk');
-        if (isset($_GET['min']) || isset($_GET['max'])) {
-            if (isset($_GET['new']) && $_GET['new'] == 'yes') {
-                $new = date('Y-m-d H:i:s', time()-(7*24*60*60));
-                $get = '?min='.$_GET['min'].'&max='.$_GET['max'].'&new='.$_GET['new'];
-            }
-            else {
-                $new = '2000-01-01 01:01:01';
-                $get = '?min='.$_GET['min'].'&max='.$_GET['max'];
-            }
-        }
-        else {
-            $new = '2000-01-01 01:01:01';
-            $get = '';
-        }
+        return $this->all()->reverse()->where('price', '>=', $min)->where('price', '<=', $max)->where('created_at', '>', $new)->forPage($page, PRODUCTS_ON_PAGE);
+    }
 
-        if (!isset($_GET['min']) || $_GET['min'] == '') $min = 0;
-        else $min = $_GET['min'];
+    function countProductsForBase($min, $max, $new)
+    {
+        return $this->all()->where('price', '>=', $min)->where('price', '<=', $max)->where('created_at', '>', $new)->count();
+    }
 
-        if (!isset($_GET['max']) || $_GET['max'] == '') $max = 10000000;
-        else $max = $_GET['max'];
+    function filterProductsForCategory($min, $max, $new, $category, $page)
+    {
+        return $this->all()->reverse()->where('price', '>=', $min)->where('price', '<=', $max)->where('created_at', '>', $new)->where('category_code', '=', $category)->forPage($page, PRODUCTS_ON_PAGE);
+    }
 
-        if (empty($category)) {
-            $mass = $this->all()->reverse()->where('price', '>=', $min)->where('price', '<=', $max)->where('created_at', '>', $new)->forPage($page, ONPAGE);
-            $count = $this->all()->where('price', '>=', $min)->where('price', '<=', $max)->where('created_at', '>', $new)->count();
-        }
-        else {
-            $mass = $this->all()->reverse()->where('price', '>=', $min)->where('price', '<=', $max)->where('created_at', '>', $new)->where('category_code', '=', $category)->forPage($page, ONPAGE);
-            $count = $this->all()->where('price', '>=', $min)->where('price', '<=', $max)->where('created_at', '>', $new)->where('category_code', '=', $category)->count();
-        }
-
-        $pages = ceil($count / ONPAGE);
-
-        $array['products'] = $mass;
-        $array['pages'] = $pages;
-        $array['get'] = $get;
-
-        return $array;
+    function countProductsForCategory($min, $max, $new, $category)
+    {
+        return $this->all()->where('price', '>=', $min)->where('price', '<=', $max)->where('created_at', '>', $new)->where('category_code', '=', $category)->count();  
     }
 
 
     // Функция для страницы basket
-    function productsForBasket($array)
+    function infoProduct($code)
     {
-        $products = [];
-        $basket = [];
-        $total = 0;
-        foreach ($array as $code => $count) {
-            $product = Product::all()->where('code', $code);
-            foreach ($product as $path) {
-                $product = $path;
-            }
-            if(empty($product)) $product['price'] = 0;
-            $product['count'] = $count;
-            array_push($products, $product);
-            $total += $product['price'] * $count;
-        }
-        $basket += ['products' => $products];
-        $basket += ['total' => $total];
-        return $basket;
+        $product = Product::select('name', 'code', 'image', 'price')->where('code', '=', $code)->get();
+        return $product[0];
     }
     
 
@@ -90,7 +54,7 @@ class Product extends Model
 
 
     // Функция для добавления товара
-    function setProduct($data)
+    function addProduct($data)
     {
         date_default_timezone_set('Europe/Minsk');
 

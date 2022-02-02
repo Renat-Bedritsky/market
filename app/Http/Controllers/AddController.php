@@ -33,8 +33,8 @@ class AddController extends Controller
             $infoForAdd += ['category_code' => $request['category_code']];
             $infoForAdd += ['price' => $request['price']];
             $infoForAdd += ['userData' => $userData];
-            $data = $functions->loadProduct($infoForAdd);
-            $products->setProduct($data);
+            $data = $functions->dataForLoadProduct($infoForAdd);
+            $products->addProduct($data);
             return redirect('add');
         }
 

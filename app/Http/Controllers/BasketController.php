@@ -17,7 +17,10 @@ class BasketController extends Controller
         if (empty($userData['author_id'])) {
             return redirect('autorization');
         }
-        $basket = $user->getBasket($userData['author_id']);
+        $info['userData'] = $userData;
+
+        $jsonBasket = $user->getBasket($userData['author_id']);
+        $basket = (array)json_decode($jsonBasket[0]['basket']);
 
         if (isset($request['plus']) && !empty($userData)) {
             $user->plusBasket($basket, $request['plus'], $userData['author_id']);
@@ -28,16 +31,29 @@ class BasketController extends Controller
             return redirect('basket');
         }
 
-        $info = $products->productsForBasket($basket);
-        $info['userData'] = $userData;
+        // echo '<pre>';
+        // print_r($basket);
+        // echo '</pre>';
 
-        foreach ($info['products'] as $key => $path) {
-            if ($path['price'] == 0) {
-                unset($info['products'][$key]);
-                $user->updateBasket($info['products'], $request['userData']['author_id']);
-                return redirect('basket');
-            }
+        // $info = $products->productForBasketv1($basket);
+        $info['products'] = [];
+        $total = 0;
+        foreach ($basket as $product => $count) {
+            $infoProduct = $products->infoProduct($product);
+            // if (empty($infoProduct)) {
+            //     unset($basket[$product]);
+            //     $user->updateBasket($basket, $request['userData']['author_id']);
+            //     return redirect('basket');
+            // }
+            $infoProduct['count'] = $count;
+            $total += $infoProduct['price'] * $count;
+            array_push($info['products'], $infoProduct);
         }
+        $info += ['total' => $total];
+
+        // echo '<pre>';
+        // print_r($info);
+        // echo '</pre>';
 
         return view('basket', ['info' => $info]);
     }

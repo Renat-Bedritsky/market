@@ -13,8 +13,10 @@ class Controller extends BaseController
 
     function __construct()
     {
-        $uri = $_SERVER['REQUEST_URI'];
+        date_default_timezone_set('Europe/Minsk');
 
+        $uri = $_SERVER['REQUEST_URI'];
+        
         $routes = [
             '0' => '\/?',
             '1' => '\/?([0-9]*)',
