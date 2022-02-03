@@ -15,7 +15,7 @@ class BasketController extends Controller
 
         $userData = $user->checkCookieLogin();
         if (empty($userData['author_id'])) {
-            return redirect('autorization');
+            return redirect('auth');
         }
         $info['userData'] = $userData;
 

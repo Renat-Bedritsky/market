@@ -50,12 +50,11 @@
     <!-- Форма для пагинации -->
     <div class="pages_pagination width">
         Страница: 
-        <?php for ($i = 1; $i <= $info['pages']; $i++) {
-            $link = '/'.$info['category']['code'].'/'.$i.$info['get']; ?>
+        @for ($i = 1; $i <= $info['pages']; $i++)
             <span>
-                <a href="<?= $link ?>"><?= $i ?></a>
+                <a href="{{ '/'.$info['category']['code'].'/'.$i.$info['link'] }}">{{ $i }}</a>
             </span>
-        <?php } ?>
+        @endfor
     </div>
 </div>
 

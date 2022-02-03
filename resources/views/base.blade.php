@@ -48,7 +48,7 @@
         Страница:
         @for ($i = 1; $i <= $info['pages']; $i++)
             <span>
-                <a href="{{ '/'.$i.$info['get'] }}">{{ $i }}</a>
+                <a href="{{ '/'.$i.$info['link'] }}">{{ $i }}</a>
             </span>
         @endfor
     </div>

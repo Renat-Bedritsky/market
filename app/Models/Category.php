@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     use HasFactory;
+
+    function infoCategory($code)
+    {
+        return Category::select('name', 'code')->where('code', '=', $code)->get();
+    }
 }
