@@ -12,17 +12,11 @@ class ControlController extends Controller
         $userData = $user->checkCookieLogin();
         $info['userData'] = $userData;
 
-        if (!isset($userData['position']) || $userData['position'] == 'operator' || $userData['position'] == 'user' || $userData['position'] == 'banned') {
-            return abort(404);
-        }
-        
-        $check = User::select('login')->where('login', $login)->get();
-        if (!sizeof($check)) {
-            return abort(404);
-        }
+        $this->accessToThisPage($userData);
+        $this->checkingUserBeingViewed($login);
 
         if(isset($request['position'])) {
-            User::where('login', $request['login'])->update(['position'=> $request['position']]);
+            $user->updatePosition($request['login'], $request['position']);
             return redirect('control/'.$login);
         }
 
@@ -31,5 +25,22 @@ class ControlController extends Controller
         $info['focus'] = $login;
 
         return view('control', ['info' => $info]);
+    }
+
+    function accessToThisPage($userData)
+    {
+        if (!isset($userData['position']) || $userData['position'] == 'operator' || $userData['position'] == 'user' || $userData['position'] == 'banned') {
+            return abort(404);
+        }
+    }
+
+    function checkingUserBeingViewed($login)
+    {
+        $user = new User;
+        
+        $check = $user->checkLogin($login);
+        if (!sizeof($check)) {
+            return abort(404);
+        }
     }
 }

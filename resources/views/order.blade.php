@@ -10,7 +10,7 @@
     <div class="width">
         <div class="order_wrapper">
             <h2>{{ $info['h2'] }}</h2>
-            <p>Общая стоимость: <span class="color_price">{{ $info['price'] }} BYN</span></p>
+            <p>Общая стоимость: <span class="color_price">{{ $info['basketPrice'] }} BYN</span></p>
             <p>Укажите свои имя и номер телефона, чтобы наш менеджер мог с вами связаться:</p>
 
             <form method="POST">

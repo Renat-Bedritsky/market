@@ -48,7 +48,7 @@
                 @if (isset($user['login']) && $user['access'] == 'allowed')
                     <button name="plus" value="{{ $info[0]['code'] }}">Добавить в корзину</button>
                 @else
-                    <span class="add_basket_detail"><a href="/autorization">Добавить в корзину</a></span>
+                    <span class="add_basket_detail"><a href="/auth">Добавить в корзину</a></span>
                 @endif
             </form>
             <p>Автор: <a href="/profile/{{ $info[0]['author'] }}">{{ $info[0]['author'] }}</a></p>

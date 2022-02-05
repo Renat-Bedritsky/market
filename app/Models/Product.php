@@ -30,34 +30,23 @@ class Product extends Model
         return $this->all()->where('price', '>=', $min)->where('price', '<=', $max)->where('created_at', '>', $new)->where('category_code', '=', $category)->count();  
     }
 
-
-    // Функция для страницы basket
     function infoProduct($code)
     {
-        $product = Product::select('name', 'code', 'image', 'price')->where('code', '=', $code)->get();
-        return $product[0];
+        return Product::select('id','category_code', 'author_id', 'name', 'code', 'description', 'image', 'price')->where('code', '=', $code)->get();
     }
     
-
-    // Сумма цены корзины
-    function totalPriceBasket($basket)
+    function priceProduct($code)
     {
-        $total = 0;
-        foreach ($basket as $key => $path) {
-            $price = Product::select('price')->where('code', $key)->get();
-            if(!isset($price[0]['price'])) continue;
-            $sum = $price[0]['price'] * $path;
-            $total += $sum;
-        }
-       return $total;
+        return Product::select('price')->where('code', '=', $code)->get();
     }
 
+    function singleUserProducts($authorId)
+    {
+        return Product::select('id', 'name', 'code')->where('author_id', '=', $authorId)->get();
+    }
 
-    // Функция для добавления товара
     function addProduct($data)
     {
-        date_default_timezone_set('Europe/Minsk');
-
         Product::insert([
             'category_code' => $data['category_code'],
             'author_id' => $data['author_id'],
@@ -68,5 +57,10 @@ class Product extends Model
             'price' => $data['price'],
             'created_at' => date("Y-m-d H:i:s")
         ]);
+    }
+
+    function deleteProduct($code)
+    {
+        Product::where('code', '=', $code)->delete(); 
     }
 }

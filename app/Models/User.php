@@ -43,11 +43,6 @@ class User extends Authenticatable
     ];
     public $timestamps = false;
 
-    // Функция для получения всех логинов и паролей (для авторизации) TO DO
-    // protected function allLoginAndPass() {
-    //     return $this->all();
-    // }
-
 
     // Функция для сверки COOKIE с существующими пользователями
     function checkCookieLogin()
@@ -60,16 +55,8 @@ class User extends Authenticatable
                 $userData = ['author_id' => $user['id'], 'login' => $user['login'], 'access' => $access, 'position' => $user['position']];
                 return $userData;
             }
-            // else if (isset($_COOKIE['login'])) setcookie('login', $_COOKIE['login'], time()-10);  // Возможно не понадобится
         }
         return '0';
-    }
-
-
-    // Функция для получения данных корзины
-    function getBasket($id)
-    {
-        return User::select('basket')->where('id', '=', $id)->get();
     }
 
 
@@ -84,76 +71,62 @@ class User extends Authenticatable
         }
     }
 
-
-    // Функция для добавления товара в корзину
-    function plusBasket($array, $code, $user_id)
+    function getBasket($id)
     {
-        if (array_key_exists($code, $array)) {                       // Если товар есть в корзине
-            $array[$code] += 1;
-        }
-        else {                                                       // Если товара нет в корзине
-            if (array_key_exists(0, $array)) {
-                unset($array[0]);
-            }
-            $count = 1;
-            $array += [$code => $count];
-        }
-        $json = json_encode($array);
-        User::where("id", $user_id)->update(["basket" => "$json"]);
+        return User::select('basket')->where('id', '=', $id)->get();
     }
 
-
-    // Функция для удаления товара из корзины
-    function minusBasket($array, $code, $user_id)
+    function plusBasket($userId, $basket)
     {
-        $array[$code] -= 1;
-        if ($array[$code] == 0) {
-            unset($array[$code]);
-        }
-        $json = json_encode($array);
-        User::where("id", $user_id)->update(["basket" => "$json"]);
+        User::where("id", '=', $userId)->update(["basket" => "$basket"]);
     }
 
-
-    // Обновить корзину
-    function updateBasket($basket, $user_id)
+    function minusBasket($userId, $basket)
     {
-        $array = [];
-        foreach ($basket as $path) {
-            $array += [$path['code'] => $path['count']];
-
-        }
-        $json = json_encode($array);
-        User::where("id", $user_id)->update(["basket" => "$json"]);
+        User::where("id", $userId)->update(["basket" => "$basket"]);
     }
 
-
-    // Функция для проверки существования логина (для регистрации)
     function checkLogin($login)
     {
-        $allUsers = User::select('login')->get();
-        foreach ($allUsers as $user) {
-            if ($user['login'] == $login) {
-                return 'User exist';
-            }
-        }
-        return 'User not exist';
+        return User::select('login')->where('login', '=', $login)->get();
+    }
+
+    function updatePosition($userLogin, $newPosition)
+    {
+        User::where('login', '=', $userLogin)->update(['position'=> $newPosition]);
+    }
+
+    function authorOfProduct($userId)
+    {
+        return User::select('login')->where('id', '=', $userId)->get();
+    }
+
+    function profileInformation($login)
+    {
+        return User::select('id', 'login', 'foto', 'basket', 'position', 'created_at')->where('login', $login)->get();
+    }
+
+    function updateFoto($id, $image)
+    {
+        User::where('id', $id)->update(['foto' => $image]);
+    }
+
+    function searchUser($login)
+    {
+        return User::select('login')->where('login', 'LIKE', $login.'%')->get();
     }
 
     
     // Функция для добавления пользователя
     function registrationUser($login, $password)
     {
-        date_default_timezone_set('Europe/Minsk');
-        $date = date("Y-m-d H:i:s");
-
         User::insert([
             'login' => $login,
             'password' => $password,
             'foto' => 'start-foto.png',
             'basket' => '[]',
             'position' => 'user',
-            'created_at' => $date
+            'created_at' => date("Y-m-d H:i:s")
         ]);
     }
 
@@ -188,5 +161,10 @@ class User extends Authenticatable
             array_push($result, $data[$key]);
         }
         return $result;  
+    }
+
+    function clearBasket($userId)
+    {
+        User::where("id", $userId)->update(["basket" => "[]"]);
     }
 }

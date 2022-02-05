@@ -14,58 +14,85 @@ class ProfileController extends Controller
     {
         $user = new User;
         $functions = new Functions;
-
-        // Удаление товара
-        if (isset($request['delete_product_yes'])) {
-            Product::where('code', $request['delete_product_yes'])->delete();
-            Comment::where('product_code', $request['delete_product_yes'])->delete();
-            return redirect('profile/'.$login);
-        }
-
-        // Удаление коментария
-        if (isset($request['delete_comment_yes'])) {
-            Comment::where('updated_at', $request['delete_comment_yes'])->delete();
-            return redirect('profile/'.$login);
-        }
+        $product = new Product;
+        $comment = new Comment;
 
         $userData = $user->checkCookieLogin();
         $info['userData'] = $userData;
 
-        $data = User::select('id', 'login', 'foto', 'basket', 'position', 'created_at')->where('login', $login)->get();
-        if (!sizeof($data)) {
-            return abort(404);
-        }
+        $profileInformation = $this->getProfileInformation($login);
 
-        // Обновление фото профиля
-        if (isset($request['update_foto'])) {
-            if (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/foto_profiles/'.$data[0]['foto']) && $data[0]['foto'] != '../site-images/start-foto.png') {
-                unlink($_SERVER['DOCUMENT_ROOT'].'/images/foto_profiles/'.$data[0]['foto']);
-            }
-            $image = $functions->loadFoto('foto_profiles');
-            $id = $userData['author_id'];
-            User::where('id', $id)->update(['foto' => $image]);
+        if (isset($request['delete_product_yes']) || $request['delete_comment_yes'] || isset($request['update_foto'])) {
+            $this->processingDeleteProduct($request, $login);
+            $this->processingDeleteComment($request, $login);
+            $this->processingUpdateFoto($request, $profileInformation['foto'], $userData['author_id']);
             return redirect('profile/'.$login);
         }
 
-        $info['focusData'] = $data[0];
-        $arComments = Comment::select('product_code', 'content', 'updated_at')->where('author_id', $data[0]['id'])->get();
-        $info['comments'] = $arComments;
-        $arProducts = Product::select('id', 'name', 'code')->where('author_id', $data[0]['id'])->get();
-        $info['products'] = $arProducts;
-
-        $info['resolution'] = $functions->resolutionDelete($data[0], $userData);
-
-        $link = $_SERVER['DOCUMENT_ROOT'].'/images/foto_profiles/'.$data[0]['foto'];
-        if (!file_exists($link) || $data[0]['foto'] == '') {
-            $data[0]['foto'] = '../site-images/start-foto.png';
-        }
-
-        if (isset($request['search_user'])) {
-            $search = $request['search_user'];
-            $result = User::select('login')->where('login', 'LIKE', $search.'%')->get();
-            $info['search'] = $result;
-        }
+        $info['focusData'] = $profileInformation;
+        $info['comments'] = $comment->singleUserComments($profileInformation['id']);
+        $info['products'] = $product->singleUserProducts($profileInformation['id']);
+        $info['resolution'] = $functions->resolutionDelete($profileInformation, $userData);
+        $info['search'] = $this->processingSearchUser($request);
 
         return view('profile', ['info' => $info]);
+    }
+
+    function processingDeleteProduct($request)
+    {
+        if (isset($request['delete_product_yes'])) {
+            $product = new Product;
+            $comment = new Comment;
+            
+            $product->deleteProduct($request['delete_product_yes']);
+            $comment->removeCommentsOfOneProduct($request['delete_product_yes']);
+        }
+    }
+
+    function processingDeleteComment($request)
+    {
+        if (isset($request['delete_comment_yes'])) {
+            $comment = new Comment;
+            $comment->deleteComment($request['delete_comment_yes']);
+        } 
+    }
+
+    function getProfileInformation($login)
+    {
+        $user = new User;
+
+        $profileInformation = $user->profileInformation($login);
+        if (!sizeof($profileInformation)) {
+            return abort(404);
+        }
+
+        $link = $_SERVER['DOCUMENT_ROOT'].'/images/foto_profiles/'.$profileInformation[0]['foto'];
+        if (!file_exists($link) || $profileInformation[0]['foto'] == '') {
+            $profileInformation[0]['foto'] = '../site-images/start-foto.png';
+        }
+
+        return $profileInformation[0];
+    }
+
+    function processingUpdateFoto($request, $foto, $userId)
+    {
+        if (isset($request['update_foto'])) {
+            $user = new User;
+            $functions = new Functions;
+    
+            if (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/foto_profiles/'.$foto) && $foto != '../site-images/start-foto.png') {
+                unlink($_SERVER['DOCUMENT_ROOT'].'/images/foto_profiles/'.$foto);
+            }
+            $image = $functions->loadFoto('foto_profiles');
+            $user->updateFoto($userId, $image);
+        }
+    }
+
+    function processingSearchUser($request)
+    {
+        if (isset($request['search_user'])) {
+            $user = new User;
+            return $user->searchUser($request['search_user']);
+        }
     }
 }

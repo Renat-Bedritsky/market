@@ -135,7 +135,36 @@ class Controller extends BaseController
 
         $jsonBasket = $this->user->getBasket($userData['author_id']);
         $basket = (array)json_decode($jsonBasket[0]['basket']);
-        $this->user->plusBasket($basket, $productCode, $userData['author_id']);
+
+        $this->processingPlusBasket($basket, $productCode, $userData['author_id']);
         return redirect($_SERVER['REQUEST_URI']);
+    }
+
+    function processingPlusBasket($basket, $productCode, $userId)
+    {
+        $this->user = new User;
+        if (array_key_exists($productCode, $basket)) {
+            $basket[$productCode] += 1;
+        }
+        else {
+            if (array_key_exists(0, $basket)) {
+                unset($basket[0]);
+            }
+            $count = 1;
+            $basket += [$productCode => $count];
+        }
+        $json = json_encode($basket);
+        $this->user->plusBasket($userId, $json);
+    }
+
+    function processingMinusBasket($basket, $productCode, $userId)
+    {
+        $this->user = new User;
+        $basket[$productCode] -= 1;
+        if ($basket[$productCode] == 0) {
+            unset($basket[$productCode]);
+        }
+        $json = json_encode($basket);
+        $this->user->minusBasket($userId, $json);
     }
 }

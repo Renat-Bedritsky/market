@@ -13,25 +13,48 @@ class AuthController extends Controller
         $userData = $user->checkCookieLogin();
         $info['userData'] = $userData;
         
-        if (isset($userData['author_id'])) {
-            return abort(404);
-        }
+        $this->accessToThisPage($userData);
+
         if (isset($request['registration'])) {
             return redirect('registration');
         }
         
-        $info['h1'] = 'Авторизация';
+        $info['h1'] = $this->titleAndCheckData($request);
 
-        if (isset($request['enter'])) {
-            if ($user->authentication($request['login'], md5($request['password'])) == 'authenticationGO') {
-                setcookie('login', md5($request['login'].md5($request['password'])));
-                return redirect('/');
-            }
-            else {
-                $info['h1'] = 'Проверьте логин и пароль';
-            }
+        if ($info['h1'] == 'Авторизация пройдена') {
+            return redirect('/');
         }
 
         return view('auth', ['info' => $info]);
+    }
+
+    function accessToThisPage($userData)
+    {
+        if (isset($userData['position'])) {
+            return abort(404);
+        }
+    }
+
+    function titleAndCheckData($request)
+    {
+        if (isset($request['enter'])) {
+            return $this->checkLoginAndPassword($request);
+        }
+        else {
+            return 'Авторизация';
+        }
+    }
+
+    function checkLoginAndPassword($request)
+    {
+        $user = new User;
+
+        if ($user->authentication($request['login'], md5($request['password'])) == 'authenticationGO') {
+            setcookie('login', md5($request['login'].md5($request['password'])));
+            return 'Авторизация пройдена';
+        }
+        else {
+            return 'Проверьте логин и пароль';
+        }
     }
 }

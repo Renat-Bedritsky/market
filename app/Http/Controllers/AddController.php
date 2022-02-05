@@ -13,15 +13,14 @@ class AddController extends Controller
     function add(Request $request)
     {
         $user = new User;
+        $category = new Category;
 
         $userData = $user->checkCookieLogin();
         $info['userData'] = $userData;
 
-        if (!isset($userData['position']) || $userData['position'] == 'moderator' || $userData['position'] == 'user' || $userData['position'] == 'banned') {
-            return abort(404);
-        }
+        $this->accessToThisPage($userData);
 
-        $allCategories = Category::select('name', 'code')->get();
+        $allCategories = $category->nameAndCodeCategories();
         $info['categories'] = $allCategories;
 
         if (isset($request['enter'])) {
@@ -29,6 +28,13 @@ class AddController extends Controller
         }
 
         return view('add', ['info' => $info]);
+    }
+
+    function accessToThisPage($userData)
+    {
+        if (!isset($userData['position']) || $userData['position'] == 'moderator' || $userData['position'] == 'user' || $userData['position'] == 'banned') {
+            return abort(404);
+        }
     }
 
     function actionAdd($request, $userData)

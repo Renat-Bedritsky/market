@@ -11,9 +11,10 @@ class CategoriesController extends Controller
     function getCategories()
     {
         $user = new User;
+        $category = new Category;
         $userData = $user->checkCookieLogin();
 
-        $info['categories'] = Category::all();
+        $info['categories'] = $category->infoCategories();
         $info['userData'] = $userData;
 
         return view('categories', ['info' => $info]);

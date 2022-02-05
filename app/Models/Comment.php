@@ -9,11 +9,8 @@ class Comment extends Model
 {
     use HasFactory;
 
-
-    // Функция для добавления коментариев
-    function addComment($data) {
-        date_default_timezone_set('Europe/Minsk');
-
+    function addComment($data)
+    {
         Comment::insert([
             'author_id' => $data['author_id'],
             'product_code' => $data['product_code'],
@@ -23,16 +20,28 @@ class Comment extends Model
         ]);
     }
 
-
-    // Функция для удаления одного коментария к товару
-    function deleteComment($date) {
-        Comment::where('updated_at', $date)->delete();
+    function deleteComment($date)
+    {
+        Comment::where('updated_at', '=', $date)->delete();
     }
 
+    function updateComment($text, $author_id, $date)
+    {
+        Comment::where('author_id', '=', $author_id)->where('updated_at', '=', $date)->update(['content'=> $text], ['updated_at' => date("Y-m-d H:i:s")]);
+    }
 
-    // Функция для обновления комментария
-    function updateComment($text, $author_id, $date) {
-        date_default_timezone_set('Europe/Minsk');
-        Comment::where('author_id', $author_id)->where('updated_at', $date)->update(['content'=> $text], ['updated_at' => date("Y-m-d H:i:s")]);
+    function singleProductComments($code)
+    {
+        return Comment::select('*')->where('product_code', '=', $code)->get();
+    }
+
+    function removeCommentsOfOneProduct($productCode)
+    {
+        Comment::where('product_code', '=', $productCode)->delete();
+    }
+
+    function singleUserComments($authorId)
+    {
+        return Comment::select('product_code', 'content', 'updated_at')->where('author_id', '=', $authorId)->get();
     }
 }

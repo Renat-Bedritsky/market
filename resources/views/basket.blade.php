@@ -38,18 +38,18 @@
             <tr style="height:50px;">
                 <td colspan="2">Итоговая стоимость:</td>
                 <td colspan="2"></td>
-                <td>{{ $info['total'] }} BYN</td>
+                <td>{{ $info['basket_price'] }} BYN</td>
             </tr>
         </table>
 
         <div class="basket_order">
-            @if ($info['total'] > 0)
+            @if ($info['basket_price'] > 0)
                 <a href="/order">Оформить заказ</a>
             @endif
         </div>
 
         <div class="basket_clear">
-            @if ($info['total'] > 0)
+            @if ($info['basket_price'] > 0)
                 <a href="/basket/clear">Очистить</a>
             @endif
         </div>

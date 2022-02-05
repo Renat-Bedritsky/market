@@ -13,41 +13,70 @@ class DetailController extends Controller
     function getDetail(Request $request, $code)
     {
         $user = new User;
-        $functions = new Functions;
-        $comment = new Comment;
-
-        $info = Product::select('id','category_code', 'author_id', 'name', 'code', 'description', 'image', 'price')->where('code', $code)->get();
-        if (!sizeof($info)) {
-            abort(404);
-        }
-        
-        $login = User::select('login')->where('id', $info[0]['author_id'])->get();
-        $info[0]['author'] = $login[0]['login'];
-        unset($info[0]['author_id']);
-
         $userData = $user->checkCookieLogin();
-        $info['userData'] = $userData;
 
-        $com = Comment::select('*')->where('product_code', $code)->get();
-        if (empty($com)) {
-            $info['comments'] = '';
+        $infoProduct = $this->getInfoOfTheProduct($code);
+        $infoProduct = $this->getCommentsOfTheProduct($infoProduct, $code, $userData);
+        $infoProduct['userData'] = $userData;
+
+        if (isset($request['plus']) && !empty($userData)) {
+            $this->requestPlusBasket($request['plus']);
         }
-        else {
-            $ar = $user->getUsers($com);
-            $info['comments'] = $ar;
-            foreach ($info['comments'] as $key => $comment) {
-                $resolution = $functions->resolutionDelete($comment['user'], $userData);
-                $info['comments'][$key]['user']['resolution'] = $resolution;
-            }
+        else if (isset($request['plus']) && empty($userData)) {
+            return redirect('auth');
         }
 
-        if (isset($request['plus'])) {
-            $basket = $user->getBasket($userData['author_id']);
-            $user->plusBasket($basket, $request['plus'], $userData['author_id']);
+        if (isset($request['enter_comment']) || isset($request['enter_update']) || isset($request['delete_comment_yes'])) {
+            $this->processingAddComment($request, $code, $userData);
+            $this->processingUpdateComment($request, $userData);
+            $this->processingDeleteComment($request);
             return redirect('detail/'.$code);
         }
 
-        // Добавление коментария
+        return view('detail', ['info' => $infoProduct]);
+    }
+
+    function getInfoOfTheProduct($code)
+    {
+        $user = new User;
+        $product = new Product;
+
+        $infoProduct = $product->infoProduct($code);
+        if (!sizeof($infoProduct)) {
+            return abort(404);
+        }
+
+        $authorOfProduct = $user->authorOfProduct($infoProduct[0]['author_id']);
+        $infoProduct[0]['author'] = $authorOfProduct[0]['login'];
+        unset($infoProduct[0]['author_id']);
+
+        return $infoProduct;
+    }
+
+    function getCommentsOfTheProduct($infoProduct, $code, $userData)
+    {
+        $user = new User;
+        $functions = new Functions;
+        $comment = new Comment;
+
+        $singleProductComments = $comment->singleProductComments($code);
+        if (empty($singleProductComments)) {
+            $infoProduct['comments'] = '';
+        }
+        else {
+            $ar = $user->getUsers($singleProductComments);
+            $infoProduct['comments'] = $ar;
+            foreach ($infoProduct['comments'] as $key => $comment) {
+                $resolution = $functions->resolutionDelete($comment['user'], $userData);
+                $infoProduct['comments'][$key]['user']['resolution'] = $resolution;
+            }
+        }
+        return $infoProduct;
+    }
+
+    function processingAddComment($request, $code, $userData)
+    {
+        $comment = new Comment;
         if(isset($request['enter_comment'])) {
             $newComment = [
                 'author_id' => $userData['author_id'],
@@ -55,21 +84,22 @@ class DetailController extends Controller
                 'content' => $request['content']
             ];
             $comment->addComment($newComment);
-            return redirect('detail/'.$code);
-        }
+        } 
+    }
 
-        // Изменение коментария
+    function processingUpdateComment($request, $userData)
+    {
+        $comment = new Comment;
         if (isset($request['enter_update'])) {
             $comment->updateComment($request['content'], $userData['author_id'], $request['date']);
-            return redirect('detail/'.$code);
         }
+    }
 
-        // Удаление коментария
+    function processingDeleteComment($request)
+    {
+        $comment = new Comment;
         if (isset($request['delete_comment_yes'])) {
             $comment->deleteComment($request['delete_comment_yes']);
-            return redirect('detail/'.$code);
         }
-
-        return view('detail', ['info' => $info]);
     }
 }
