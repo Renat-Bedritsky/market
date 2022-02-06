@@ -9,12 +9,11 @@ use App\Models\Product;
 
 class CategoryController extends Controller
 {
-    function getCategory(Request $request, $page = 1)
+    protected function getCategory(Request $request, $page = 1)
     {
-        $user = new User;
         $products = new Product;
         $categories = new Category;
-        $userData = $user->checkCookieLogin();
+        $userData = $this->checkCookieLogin();
         $info['userData'] = $userData;
 
         $minPrice = $this->defineMin($request['min']);
@@ -48,20 +47,15 @@ class CategoryController extends Controller
         return view('category', ['info' => $info]);
     }
 
-    function defineCategory()
+    private function defineCategory()
     {
         $partLink = explode('/', $_SERVER['REQUEST_URI']);
         $codeCategory = $partLink[1];
-        if (
-            $codeCategory != 'mobile' &&
-            $codeCategory != 'portable' &&
-            $codeCategory != 'appliances' &&
-            $codeCategory != 'other'
-            ) {
-            abort(404);
+        if ($codeCategory == 'mobile' || $codeCategory == 'portable' || $codeCategory == 'appliances' || $codeCategory == 'other') {
+            return $codeCategory;
         }
         else {
-            return $codeCategory;
+            return abort(404);
         }
     }
 }

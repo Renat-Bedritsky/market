@@ -10,11 +10,10 @@ use App\Support\Functions;
 
 class DetailController extends Controller
 {
-    function getDetail(Request $request, $code)
+    protected function getDetail(Request $request, $code)
     {
-        $user = new User;
-        $userData = $user->checkCookieLogin();
-
+        $userData = $this->checkCookieLogin();
+        
         $infoProduct = $this->getInfoOfTheProduct($code);
         $infoProduct = $this->getCommentsOfTheProduct($infoProduct, $code, $userData);
         $infoProduct['userData'] = $userData;
@@ -36,7 +35,7 @@ class DetailController extends Controller
         return view('detail', ['info' => $infoProduct]);
     }
 
-    function getInfoOfTheProduct($code)
+    private function getInfoOfTheProduct($code)
     {
         $user = new User;
         $product = new Product;
@@ -53,10 +52,8 @@ class DetailController extends Controller
         return $infoProduct;
     }
 
-    function getCommentsOfTheProduct($infoProduct, $code, $userData)
+    private function getCommentsOfTheProduct($infoProduct, $code, $userData)
     {
-        $user = new User;
-        $functions = new Functions;
         $comment = new Comment;
 
         $singleProductComments = $comment->singleProductComments($code);
@@ -64,20 +61,49 @@ class DetailController extends Controller
             $infoProduct['comments'] = '';
         }
         else {
-            $ar = $user->getUsers($singleProductComments);
-            $infoProduct['comments'] = $ar;
-            foreach ($infoProduct['comments'] as $key => $comment) {
-                $resolution = $functions->resolutionDelete($comment['user'], $userData);
-                $infoProduct['comments'][$key]['user']['resolution'] = $resolution;
-            }
+            $comments = $this->getInformationAboutCommentators($singleProductComments, $userData);
+            $infoProduct['comments'] = $comments;
         }
         return $infoProduct;
     }
 
-    function processingAddComment($request, $code, $userData)
+    private function getInformationAboutCommentators($singleProductComments, $userData)
     {
-        $comment = new Comment;
+        $user = new User;
+        $functions = new Functions;
+
+        foreach ($singleProductComments as $serialNumber => $comment) {
+            $id = $comment['author_id'];
+            $infoUser = $user->getUser($id);
+
+            $infoUser[0]['foto'] = $this->photoCheck($infoUser[0]['foto']);
+            $singleProductComments[$serialNumber]['user'] = $infoUser[0];
+        }
+
+        foreach ($singleProductComments as $serialNumber => $comment) {
+            $resolution = $functions->resolutionDelete($comment['user'], $userData);
+            $singleProductComments[$serialNumber]['user']['resolution'] = $resolution;
+        }
+        return $singleProductComments;
+    }
+
+    private function photoCheck($fotoName)
+    {
+        $way = $_SERVER['DOCUMENT_ROOT'].'/public/images/foto_profiles/'.$fotoName;
+
+        if (!file_exists($way) || $fotoName == '') {
+            return '../site-images/start-foto.png';
+        }
+        else {
+            return $fotoName;
+        }
+    }
+
+    private function processingAddComment($request, $code, $userData)
+    {
         if(isset($request['enter_comment'])) {
+            $comment = new Comment;
+            
             $newComment = [
                 'author_id' => $userData['author_id'],
                 'product_code' => $code,
@@ -87,18 +113,18 @@ class DetailController extends Controller
         } 
     }
 
-    function processingUpdateComment($request, $userData)
+    private function processingUpdateComment($request, $userData)
     {
-        $comment = new Comment;
         if (isset($request['enter_update'])) {
+            $comment = new Comment;
             $comment->updateComment($request['content'], $userData['author_id'], $request['date']);
         }
     }
 
-    function processingDeleteComment($request)
+    private function processingDeleteComment($request)
     {
-        $comment = new Comment;
         if (isset($request['delete_comment_yes'])) {
+            $comment = new Comment;
             $comment->deleteComment($request['delete_comment_yes']);
         }
     }

@@ -10,14 +10,13 @@ use App\Support\Functions;
 
 class ProfileController extends Controller
 {
-    function profile(Request $request, $login)
+    protected function profile(Request $request, $login)
     {
-        $user = new User;
         $functions = new Functions;
         $product = new Product;
         $comment = new Comment;
 
-        $userData = $user->checkCookieLogin();
+        $userData = $this->checkCookieLogin();
         $info['userData'] = $userData;
 
         $profileInformation = $this->getProfileInformation($login);
@@ -38,7 +37,7 @@ class ProfileController extends Controller
         return view('profile', ['info' => $info]);
     }
 
-    function processingDeleteProduct($request)
+    private function processingDeleteProduct($request)
     {
         if (isset($request['delete_product_yes'])) {
             $product = new Product;
@@ -49,7 +48,7 @@ class ProfileController extends Controller
         }
     }
 
-    function processingDeleteComment($request)
+    private function processingDeleteComment($request)
     {
         if (isset($request['delete_comment_yes'])) {
             $comment = new Comment;
@@ -57,7 +56,7 @@ class ProfileController extends Controller
         } 
     }
 
-    function getProfileInformation($login)
+    private function getProfileInformation($login)
     {
         $user = new User;
 
@@ -74,7 +73,7 @@ class ProfileController extends Controller
         return $profileInformation[0];
     }
 
-    function processingUpdateFoto($request, $foto, $userId)
+    private function processingUpdateFoto($request, $foto, $userId)
     {
         if (isset($request['update_foto'])) {
             $user = new User;
@@ -88,7 +87,7 @@ class ProfileController extends Controller
         }
     }
 
-    function processingSearchUser($request)
+    private function processingSearchUser($request)
     {
         if (isset($request['search_user'])) {
             $user = new User;

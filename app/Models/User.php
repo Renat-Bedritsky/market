@@ -41,34 +41,29 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    
     public $timestamps = false;
 
-
-    // Функция для сверки COOKIE с существующими пользователями
-    function checkCookieLogin()
+    function registrationUser($login, $password)
     {
-        $listUsers = User::all();
-
-        foreach($listUsers as $user) {
-            if (isset($_COOKIE['login']) && $_COOKIE['login'] == md5($user['login'].$user['password'])) {
-                $access = 'allowed';
-                $userData = ['author_id' => $user['id'], 'login' => $user['login'], 'access' => $access, 'position' => $user['position']];
-                return $userData;
-            }
-        }
-        return '0';
+        User::insert([
+            'login' => $login,
+            'password' => $password,
+            'foto' => 'start-foto.png',
+            'basket' => '[]',
+            'position' => 'user',
+            'created_at' => date("Y-m-d H:i:s")
+        ]);
     }
 
-
-    // Функция для проверки логина и пароля (для авторизации)
-    function authentication($login, $password)
+    function forCheckCookie()
     {
-        $listUsers = User::all();
-        foreach($listUsers as $user) {
-            if ($login == $user['login'] && $password == $user['password']) {
-                return 'authenticationGO';
-            }
-        }
+        return User::select('id', 'login', 'password', 'position')->get();
+    }
+
+    function forCheckAuth($login)
+    {
+        return User::select('login', 'password')->where('login', '=', $login)->get();
     }
 
     function getBasket($id)
@@ -103,7 +98,7 @@ class User extends Authenticatable
 
     function profileInformation($login)
     {
-        return User::select('id', 'login', 'foto', 'basket', 'position', 'created_at')->where('login', $login)->get();
+        return User::select('id', 'login', 'foto', 'basket', 'position', 'created_at')->where('login', '=', $login)->get();
     }
 
     function updateFoto($id, $image)
@@ -116,51 +111,14 @@ class User extends Authenticatable
         return User::select('login')->where('login', 'LIKE', $login.'%')->get();
     }
 
-    
-    // Функция для добавления пользователя
-    function registrationUser($login, $password)
+    function getUser($id)
     {
-        User::insert([
-            'login' => $login,
-            'password' => $password,
-            'foto' => 'start-foto.png',
-            'basket' => '[]',
-            'position' => 'user',
-            'created_at' => date("Y-m-d H:i:s")
-        ]);
+        return User::select('id', 'login', 'foto', 'position')->where('id', '=', $id)->get();
     }
 
-
-    // Для страницы detail
-    function getUsers($data)
+    function getNameAndPosition()
     {
-        foreach ($data as $key => $path) {
-            $id = $path['author_id'];
-            $user = User::select('id', 'login', 'foto', 'position')->where('id', $id)->get();
-
-            $link = $_SERVER['DOCUMENT_ROOT'].'/public/images/foto_profiles/'.$user[0]['foto'];
-            if (!file_exists($link) || $user[0]['foto'] == '') {
-                $user[0]['foto'] = '../site-images/start-foto.png';
-            }
-
-            $data[$key]['user'] = $user[0];
-        }
-        return $data;
-    }
-
-
-    // Функция для получения логинов и статусов пользователей (для смены статуса в control)
-    function getNameAndPosition($access)
-    {
-        $data = User::select('login', 'position')->get();
-        $result = [];
-        foreach ($data as $key => $path) {
-            if ($path['position'] == 'administrator') continue;
-            if ($path['position'] == 'moderator' && $access == 'moderator') continue;
-            if ($path['position'] == 'operator' && $access == 'moderator') continue;
-            array_push($result, $data[$key]);
-        }
-        return $result;  
+        return User::select('login', 'position')->get(); 
     }
 
     function clearBasket($userId)

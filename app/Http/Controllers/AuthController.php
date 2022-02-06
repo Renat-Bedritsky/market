@@ -7,13 +7,12 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    function auth(Request $request)
+    protected function auth(Request $request)
     {
-        $user = new User;
-        $userData = $user->checkCookieLogin();
-        $info['userData'] = $userData;
-        
+        $userData = $this->checkCookieLogin();
         $this->accessToThisPage($userData);
+
+        $info['userData'] = $userData;
 
         if (isset($request['registration'])) {
             return redirect('registration');
@@ -28,14 +27,14 @@ class AuthController extends Controller
         return view('auth', ['info' => $info]);
     }
 
-    function accessToThisPage($userData)
+    private function accessToThisPage($userData)
     {
         if (isset($userData['position'])) {
             return abort(404);
         }
     }
 
-    function titleAndCheckData($request)
+    private function titleAndCheckData($request)
     {
         if (isset($request['enter'])) {
             return $this->checkLoginAndPassword($request);
@@ -45,11 +44,10 @@ class AuthController extends Controller
         }
     }
 
-    function checkLoginAndPassword($request)
+    private function checkLoginAndPassword($request)
     {
-        $user = new User;
-
-        if ($user->authentication($request['login'], md5($request['password'])) == 'authenticationGO') {
+        $checkAuthData = $this->checkAuthData($request['login'], md5($request['password']));
+        if ($checkAuthData == 'loggedIn') {
             setcookie('login', md5($request['login'].md5($request['password'])));
             return 'Авторизация пройдена';
         }

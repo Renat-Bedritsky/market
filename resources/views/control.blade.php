@@ -46,7 +46,7 @@
                             <td>Править</td>
                         </tr>
 
-                        @foreach ($info['names'] as $value)
+                        @foreach ($info['users'] as $value)
                             <tr>
                                 <td><a href="/profile/{{ $value['login'] }}">{{ $value['login'] }}</a></td>
                                 <td><?= $value['position'] ?></td>

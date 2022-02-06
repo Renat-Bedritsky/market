@@ -8,11 +8,10 @@ use App\Models\Category;
 
 class CategoriesController extends Controller
 {
-    function getCategories()
+    protected function getCategories()
     {
-        $user = new User;
         $category = new Category;
-        $userData = $user->checkCookieLogin();
+        $userData = $this->checkCookieLogin();
 
         $info['categories'] = $category->infoCategories();
         $info['userData'] = $userData;

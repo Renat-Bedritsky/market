@@ -7,14 +7,12 @@ use App\Models\User;
 
 class RegistrationController extends Controller
 {
-    function registration(Request $request)
+    protected function registration(Request $request)
     {
-        $user = new User;
-        $userData = $user->checkCookieLogin();
-        $info['userData'] = $userData;
-
+        $userData = $this->checkCookieLogin();
         $this->accessToThisPage($userData);
 
+        $info['userData'] = $userData;
         $info['h1'] = $this->titleAndCheckData($request);
 
         if ($info['h1'] == 'Пользователь зарегестрирован') {
@@ -24,14 +22,14 @@ class RegistrationController extends Controller
         return view('registration', ['info' => $info]);
     }
 
-    function accessToThisPage($userData)
+    private function accessToThisPage($userData)
     {
         if (!empty($userData)) {
             return abort(404);
         }
     }
 
-    function titleAndCheckData($request)
+    private function titleAndCheckData($request)
     {
         if (isset($request['enter'])) {
             return $this->checkingTheEnteredPassword($request);
@@ -41,7 +39,7 @@ class RegistrationController extends Controller
         }
     }
 
-    function checkingTheEnteredPassword($request)
+    private function checkingTheEnteredPassword($request)
     {
         if ($request['password_1'] == $request['password_2']) {
             return $this->checkingTheEnteredLogin($request);
@@ -51,7 +49,7 @@ class RegistrationController extends Controller
         }
     }
 
-    function checkingTheEnteredLogin($request)
+    private function checkingTheEnteredLogin($request)
     {
         $user = new User;
 

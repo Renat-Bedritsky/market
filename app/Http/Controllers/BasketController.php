@@ -8,10 +8,10 @@ use App\Models\Product;
 
 class BasketController extends Controller
 {
-    function getBasket(Request $request)
+    protected function getBasket(Request $request)
     {
         $user = new User;
-        $userData = $user->checkCookieLogin();
+        $userData = $this->checkCookieLogin();
         if (empty($userData['author_id'])) {
             return redirect('auth');
         }
@@ -35,7 +35,7 @@ class BasketController extends Controller
         return view('basket', ['info' => $info]);
     }
 
-    function addInfoProduct($basket)
+    private function addInfoProduct($basket)
     {
         $products = new Product;
         $productsInformation = [];
@@ -50,7 +50,7 @@ class BasketController extends Controller
         return $productsInformation;
     }
 
-    function basketPrice($basket)
+    private function basketPrice($basket)
     {
         $products = new Product;
         $grantTotal = 0;
@@ -61,7 +61,7 @@ class BasketController extends Controller
         return $grantTotal; 
     }
 
-    function removeRemovedProduct($basket, $product)
+    private function removeRemovedProduct($basket, $product)
     {
         $user = new User;
         $userData = $user->checkCookieLogin(); 
@@ -71,10 +71,10 @@ class BasketController extends Controller
         header('Refresh: 0');   // TO DO
     }
 
-    function clearBasket()
+    protected function clearBasket()
     {
         $user = new User;
-        $userData = $user->checkCookieLogin();
+        $userData = $this->checkCookieLogin();
         $user->clearBasket($userData['author_id']);
         return redirect('basket');
     }

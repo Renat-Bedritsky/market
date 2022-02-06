@@ -10,10 +10,10 @@ use App\Support\Functions;
 
 class OrderController extends Controller
 {
-    function order(Request $request)
+    protected function order(Request $request)
     {
         $user = new User;
-        $userData = $user->checkCookieLogin();
+        $userData = $this->checkCookieLogin();
         $info['userData'] = $userData;
         
         $jsonBasket = $user->getBasket($userData['author_id']);
@@ -30,7 +30,7 @@ class OrderController extends Controller
         return view('order', ['info' => $info]);
     }
 
-    function basketPrice($basket)
+    private function basketPrice($basket)
     {
         $products = new Product;
         $total = 0;
@@ -41,7 +41,7 @@ class OrderController extends Controller
         return $total;
     }
 
-    function titleAndCheckData($request, $userData, $basket, $basketPrice)
+    private function titleAndCheckData($request, $userData, $basket, $basketPrice)
     {
         if (isset($request['order']) && isset($request['name']) && isset($request['phone']) && isset($request['email'])) {
             return $this->checkName($request, $userData, $basket, $basketPrice);
@@ -51,7 +51,7 @@ class OrderController extends Controller
         }
     }
 
-    function checkName($request, $userData, $basket, $basketPrice)
+    private function checkName($request, $userData, $basket, $basketPrice)
     {
         if (preg_match("/^[a-zA-Zа-яА-ЯёЁ]*$/u", $request['name'])) {
             return $this->checkPhone($request, $userData, $basket, $basketPrice);
@@ -61,7 +61,7 @@ class OrderController extends Controller
         }
     }
 
-    function checkPhone($request, $userData, $basket, $basketPrice)
+    private function checkPhone($request, $userData, $basket, $basketPrice)
     {
         if (preg_match("/^(\+375|80)(29|25|44|33)(\d{3})(\d{2})(\d{2})*$/u", $request['phone']))  {
             return $this->checkEmail($request, $userData, $basket, $basketPrice);
@@ -71,7 +71,7 @@ class OrderController extends Controller
         }
     }
 
-    function checkEmail($request, $userData, $basket, $basketPrice)
+    private function checkEmail($request, $userData, $basket, $basketPrice)
     {
         $order = new Order;
         $user = new User;
@@ -86,7 +86,7 @@ class OrderController extends Controller
         }
     }
 
-    function message($request, $title)
+    private function message($request, $title)
     {
         $functions = new Functions;
         if (isset($request['order']) && $title == 'Оформление заказа') {

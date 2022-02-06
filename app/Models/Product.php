@@ -10,6 +10,20 @@ class Product extends Model
     use HasFactory;
     public $timestamps = false;
 
+    function addProduct($data)
+    {
+        Product::insert([
+            'category_code' => $data['category_code'],
+            'author_id' => $data['author_id'],
+            'name' => $data['name'],
+            'code' => $data['code'],
+            'description' => $data['description'],
+            'image' => $data['image'],
+            'price' => $data['price'],
+            'created_at' => date("Y-m-d H:i:s")
+        ]);
+    }
+
     function filterProductsForBase($min, $max, $new, $page)
     {
         return $this->all()->reverse()->where('price', '>=', $min)->where('price', '<=', $max)->where('created_at', '>', $new)->forPage($page, PRODUCTS_ON_PAGE);
@@ -43,20 +57,6 @@ class Product extends Model
     function singleUserProducts($authorId)
     {
         return Product::select('id', 'name', 'code')->where('author_id', '=', $authorId)->get();
-    }
-
-    function addProduct($data)
-    {
-        Product::insert([
-            'category_code' => $data['category_code'],
-            'author_id' => $data['author_id'],
-            'name' => $data['name'],
-            'code' => $data['code'],
-            'description' => $data['description'],
-            'image' => $data['image'],
-            'price' => $data['price'],
-            'created_at' => date("Y-m-d H:i:s")
-        ]);
     }
 
     function deleteProduct($code)

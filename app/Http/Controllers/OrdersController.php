@@ -8,11 +8,9 @@ use App\Models\Order;
 
 class OrdersController extends Controller
 {
-    function orders(Request $request)
+    protected function orders(Request $request)
     {
-        $user = new User;
-
-        $userData = $user->checkCookieLogin();
+        $userData = $this->checkCookieLogin();
         $this->accessToThisPage($userData);
 
         $info['userData'] = $userData;
@@ -28,14 +26,14 @@ class OrdersController extends Controller
         return view('orders', ['info' => $info]);
     }
 
-    function accessToThisPage($userData)
+    private function accessToThisPage($userData)
     {
         if (!isset($userData['position']) || $userData['position'] == 'moderator' || $userData['position'] == 'user' || $userData['position'] == 'banned') {
             return abort(404);
         }
     }
 
-    function newOrders()
+    private function newOrders()
     {
         $orders = new Order;
         $newOrders = $orders->getNewOrders();
@@ -47,7 +45,7 @@ class OrdersController extends Controller
         return $newOrders; 
     }
 
-    function doneOrders($operator)
+    private function doneOrders($operator)
     {
         $orders = new Order;
         $doneOrders = $orders->getDoneOrders($operator);
@@ -60,7 +58,7 @@ class OrdersController extends Controller
         return $doneOrders;
     }
 
-    function processingDoneOrder($request, $login)
+    private function processingDoneOrder($request, $login)
     {
         $orders = new Order;
         if (isset($request['order_done'])) {
@@ -68,7 +66,7 @@ class OrdersController extends Controller
         }  
     }
 
-    function processingCanceledOrder($request, $login)
+    private function processingCanceledOrder($request, $login)
     {
         $orders = new Order;
         if (isset($request['order_canceled'])) {

@@ -12,36 +12,10 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public $user;
-
     function __construct()
     {
-        date_default_timezone_set('Europe/Minsk');
-
         $uri = $_SERVER['REQUEST_URI'];
-        
-        $routes = [
-            '0' => '\/?',
-            '1' => '\/?([0-9]*)',
-            '2' => '\?([a-z0-9=\&]*)',
-            '3' => '\/?([0-9])*\?([a-z0-9=\&]*)',
-            '4' => 'categories',
-            '5' => 'basket',
-            '6' => 'basket\/clear',
-            '7' => '(mobile|portable|appliances|other)\/?',
-            '8' => '(mobile|portable|appliances|other)\/([0-9]*)',
-            '9' => '(mobile|portable|appliances|other)\/([0-9])*\?([a-z0-9=\&]*)',
-            '10' => 'profile\/([a-zA-Zа-яА-ЯёЁ0-9]*)',
-            '11' => 'detail\/([a-zA-Zа-яА-ЯёЁ0-9_-]*)',
-            '12' => 'control\/([a-zA-Zа-яА-ЯёЁ0-9_-]*)',
-            '13' => 'auth',
-            '14' => 'logout',
-            '15' => 'registration',
-            '16' => 'order',
-            '17' => 'add',
-            '18' => 'orders'
-        ];
-
+        $routes = $this->availableRoutes();
         $error = true;
 
         foreach ($routes as $link) {
@@ -59,7 +33,68 @@ class Controller extends BaseController
         }
     }
 
-    function defineMin($price)
+    private function availableRoutes()
+    {
+        return [
+        '0' => '\/?',
+        '1' => '\/?([0-9]*)',
+        '2' => '\?([a-z0-9=\&]*)',
+        '3' => '\/?([0-9])*\?([a-z0-9=\&]*)',
+        '4' => 'categories',
+        '5' => 'basket',
+        '6' => 'basket\/clear',
+        '7' => '(mobile|portable|appliances|other)\/?',
+        '8' => '(mobile|portable|appliances|other)\/([0-9]*)',
+        '9' => '(mobile|portable|appliances|other)\/([0-9])*\?([a-z0-9=\&]*)',
+        '10' => 'profile\/([a-zA-Zа-яА-ЯёЁ0-9]*)',
+        '11' => 'detail\/([a-zA-Zа-яА-ЯёЁ0-9_-]*)',
+        '12' => 'control\/([a-zA-Zа-яА-ЯёЁ0-9_-]*)',
+        '13' => 'auth',
+        '14' => 'logout',
+        '15' => 'registration',
+        '16' => 'order',
+        '17' => 'add',
+        '18' => 'orders'
+        ];
+    }
+
+    protected function checkCookieLogin()
+    {
+        return $this->processingCheckCookie();
+    }
+
+    private function processingCheckCookie()
+    {
+        $users = new User;
+        $listUsers = $users->forCheckCookie();
+
+        foreach($listUsers as $user) {
+            if (isset($_COOKIE['login']) && $_COOKIE['login'] == md5($user['login'].$user['password'])) {
+                $access = 'allowed';
+                $userData = ['author_id' => $user['id'], 'login' => $user['login'], 'access' => $access, 'position' => $user['position']];
+                return $userData;
+            }
+        }
+    }
+
+    protected function checkAuthData($login, $password)
+    {
+        return $this->processingCheckAuth($login, $password);
+    }
+
+    private function processingCheckAuth($login, $password)
+    {
+        $user = new User;
+
+        $checkUser = $user->forCheckAuth($login);
+        if (sizeof($checkUser)) {
+            if ($login == $checkUser[0]['login'] && $password == $checkUser[0]['password']) {
+                return 'loggedIn';
+            }
+        }
+    }
+
+    protected function defineMin($price)
     {
         if ($price != '') {
             if (is_numeric($price)) {
@@ -74,7 +109,7 @@ class Controller extends BaseController
         }
     }
 
-    function defineMax($price)
+    protected function defineMax($price)
     {
         if ($price != '') {
             if (is_numeric($price)) {
@@ -89,7 +124,7 @@ class Controller extends BaseController
         }
     }
 
-    function defineNew($new)
+    protected function defineNew($new)
     {
         if ($new != '') {
             if ($new == 'yes') {
@@ -104,7 +139,7 @@ class Controller extends BaseController
         }
     }
 
-    function definelink($min, $max, $new)
+    protected function definelink($min, $max, $new)
     {
         $link = '';
         if ($min != 0) {
@@ -128,21 +163,21 @@ class Controller extends BaseController
         return $link;
     }
 
-    function requestPlusBasket($productCode)
+    protected function requestPlusBasket($productCode)
     {
-        $this->user = new User;
-        $userData = $this->user->checkCookieLogin();
+        $user = new User;
+        $userData = $this->checkCookieLogin();
 
-        $jsonBasket = $this->user->getBasket($userData['author_id']);
+        $jsonBasket = $user->getBasket($userData['author_id']);
         $basket = (array)json_decode($jsonBasket[0]['basket']);
 
         $this->processingPlusBasket($basket, $productCode, $userData['author_id']);
         return redirect($_SERVER['REQUEST_URI']);
     }
 
-    function processingPlusBasket($basket, $productCode, $userId)
+    protected function processingPlusBasket($basket, $productCode, $userId)
     {
-        $this->user = new User;
+        $user = new User;
         if (array_key_exists($productCode, $basket)) {
             $basket[$productCode] += 1;
         }
@@ -154,17 +189,17 @@ class Controller extends BaseController
             $basket += [$productCode => $count];
         }
         $json = json_encode($basket);
-        $this->user->plusBasket($userId, $json);
+        $user->plusBasket($userId, $json);
     }
 
-    function processingMinusBasket($basket, $productCode, $userId)
+    protected function processingMinusBasket($basket, $productCode, $userId)
     {
-        $this->user = new User;
+        $user = new User;
         $basket[$productCode] -= 1;
         if ($basket[$productCode] == 0) {
             unset($basket[$productCode]);
         }
         $json = json_encode($basket);
-        $this->user->minusBasket($userId, $json);
+        $user->minusBasket($userId, $json);
     }
 }

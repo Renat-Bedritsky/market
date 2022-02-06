@@ -10,34 +10,33 @@ use App\Support\Functions;
 
 class AddController extends Controller
 {
-    function add(Request $request)
+    protected function add(Request $request)
     {
-        $user = new User;
         $category = new Category;
-
-        $userData = $user->checkCookieLogin();
-        $info['userData'] = $userData;
-
+        $userData = $this->checkCookieLogin();
         $this->accessToThisPage($userData);
+
+        $info['userData'] = $userData;
 
         $allCategories = $category->nameAndCodeCategories();
         $info['categories'] = $allCategories;
 
         if (isset($request['enter'])) {
             $this->actionAdd($request, $userData);
+            return redirect('add');
         }
 
         return view('add', ['info' => $info]);
     }
 
-    function accessToThisPage($userData)
+    private function accessToThisPage($userData)
     {
         if (!isset($userData['position']) || $userData['position'] == 'moderator' || $userData['position'] == 'user' || $userData['position'] == 'banned') {
             return abort(404);
         }
     }
 
-    function actionAdd($request, $userData)
+    private function actionAdd($request, $userData)
     {
         $functions = new Functions;
         $products = new Product;
@@ -48,8 +47,8 @@ class AddController extends Controller
         $infoForAdd += ['category_code' => $request['category_code']];
         $infoForAdd += ['price' => $request['price']];
         $infoForAdd += ['userData' => $userData];
-        $data = $functions->dataForLoadProduct($infoForAdd);
-        $products->addProduct($data);
-        return redirect('add');
+        
+        $dataForLoadProduct = $functions->dataForLoadProduct($infoForAdd);
+        $products->addProduct($dataForLoadProduct);
     }
 }
